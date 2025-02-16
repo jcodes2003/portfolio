@@ -240,7 +240,7 @@ const Portfolio = () => {
                   className="text-4xl font-bold"
                   variants={itemVariants}
                 >
-                  I'm <span className="text-yellow-500">Joshua Calma</span>
+                  I&apos;m <span className="text-yellow-500">Joshua Calma</span>
                 </motion.h2>
                 <motion.p
                   className="text-xl text-gray-300"
@@ -299,7 +299,7 @@ const Portfolio = () => {
                   className="text-lg leading-relaxed text-gray-300"
                   variants={itemVariants}
                 >
-                  Hi, I'm Joshua Calma, a passionate and dedicated web developer with a
+                  Hi, I&apos;m Joshua Calma, a passionate and dedicated web developer with a
                   keen eye for creating responsive, user-friendly applications that make
                   a difference. With a strong foundation in both front-end and back-end
                   development, I take pride in crafting seamless digital experiences
@@ -311,7 +311,7 @@ const Portfolio = () => {
                 >
                   My journey in web development began with a curiosity about how websites
                   work, which quickly evolved into a deep passion for coding and
-                  problem-solving. I've since mastered various modern web technologies
+                  problem-solving. I&apos;ve since mastered various modern web technologies
                   and frameworks, allowing me to build robust, scalable solutions that
                   meet contemporary web standards.
                 </motion.p>
@@ -319,8 +319,8 @@ const Portfolio = () => {
                   className="text-lg leading-relaxed text-gray-300"
                   variants={itemVariants}
                 >
-                  Currently pursuing my Bachelor's degree in Information Technology at
-                  PHINMA Cagayan de Oro College, I'm constantly expanding my knowledge
+                  Currently pursuing my Bachelor&apos;s degree in Information Technology at
+                  PHINMA Cagayan de Oro College, I&apos;m constantly expanding my knowledge
                   and staying updated with the latest industry trends. My academic
                   journey has not only equipped me with theoretical knowledge but also
                   provided practical experience through various projects and
@@ -330,7 +330,7 @@ const Portfolio = () => {
                   className="text-lg leading-relaxed text-gray-300"
                   variants={itemVariants}
                 >
-                  When I'm not coding, you'll find me exploring new technologies,
+                  When I&apos;m not coding, you&apos;ll find me exploring new technologies,
                   contributing to open-source projects, or sharing my knowledge with
                   fellow developers. I believe in continuous learning and am always
                   excited to take on new challenges that push my creative and technical
@@ -385,7 +385,7 @@ const Portfolio = () => {
                       variants={itemVariants}
                       className="border-l-2 border-blue-500 pl-4"
                     >
-                      <h4 className="text-xl font-semibold">Bachelor of Science in Information Technology</h4>
+                      <h4 className="text-xl font-semibold">Bachelor&apos;s degree in Information Technology</h4>
                       <p className="text-gray-400">PHINMA Cagayan de Oro College</p>
                       <p className="text-gray-400">Expected 2024</p>
                     </motion.div>
