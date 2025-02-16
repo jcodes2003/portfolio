@@ -414,13 +414,13 @@ const Portfolio = () => {
               >
                 <div className="relative w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-yellow-500 p-2">
                   <div className="w-full h-full rounded-full overflow-hidden">
-                    <Image
+                    {/* <Image
                       src="/assets/images/joshua.png"
                       alt="Joshua Calma"
                       layout="fill"
                       objectFit="cover"
                       className="rounded-full"
-                    />
+                    /> */}
                   </div>
                 </div>
               </motion.div>
