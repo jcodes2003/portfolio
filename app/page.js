@@ -34,7 +34,7 @@ const Portfolio = () => {
     { title: "Math Game for Kids", description: "a game for kids to learn math basic operations like addition, subtraction, multiplication, and division", image: "/assets/images/project1.png" },
     { title: "Grademanagement System", description: "teacher can easily manage the grades of their students grades and also able to generate total average of the students", image: "/assets/images/project2.png" },
     { title: "Clinica Dentista profiling and appointment System", description: "a system that allows the clinic to manage their patients and appointments and also able to generate reports", image: "/assets/images/project3.png" },
-    { title: "Design thinking app", description: "an app that allows users to create and share their own design thinking projects and to let the instructors generate new ideas of teaching", image: "/assets/images/project4.png" },
+    { title: "Design thinking app", description: "an app that allows users to create their own design thinking projects and to let the instructors generate new ideas of teaching", image: "/assets/images/project4.png" },
   ];
 
   return (
