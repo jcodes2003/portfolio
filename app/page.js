@@ -6,8 +6,28 @@ import { HashLoader } from 'react-spinners';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
+import emailjs from '@emailjs/browser';
 
-const Portfolio = () => {
+const sendEmail = (e) => {
+  e.preventDefault();
+
+  emailjs
+    .sendForm('service_ob9blbj', 'template_8gabyjk', e.target, {
+      publicKey: 'LDqH6U0m4DgFB211x',
+    })
+    .then(
+      () => {
+        console.log('SUCCESS!');
+        alert('Message sent successfully!');
+      },
+      (error) => {
+        console.log('FAILED...', error.text);
+        alert('Failed to send message. Please try again.');
+      },
+    );
+};
+
+const Portfolio = () => {  
   const projects = [
     {
       title: 'Math Game for Kids',
@@ -543,28 +563,31 @@ const Portfolio = () => {
                 Contact Me
               </motion.h2>
               <motion.form
+                onSubmit={sendEmail}
                 className="max-w-2xl mx-auto w-full space-y-6"
                 variants={containerVariants}
               >
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                  <label htmlFor="user_name" className="block text-sm font-medium mb-2">
                     Name
                   </label>
                   <input
                     type="text"
-                    id="name"
+                    id="user_name"
+                    name="user_name"
                     className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
                     required
                   />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  <label htmlFor="user_email" className="block text-sm font-medium mb-2">
                     Email
                   </label>
                   <input
                     type="email"
-                    id="email"
+                    id="user_email"
+                    name="user_email"
                     className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
                     required
                   />
@@ -576,6 +599,7 @@ const Portfolio = () => {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     rows="6"
                     className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
                     required
