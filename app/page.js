@@ -169,14 +169,18 @@ const Portfolio = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const headerOffset = 80; // Adjust this value based on your header height
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      setIsMobileMenuOpen(false);
+      
+      setTimeout(() => {
+        const headerOffset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }, 100);
     }
   };
 
@@ -561,7 +565,7 @@ const Portfolio = () => {
                       <h4 className={`text-xl font-semibold ${
                         theme === 'dark' ? 'text-gray-100' : 'text-black'
                       }`}>
-                        Bachelor &apos;s degree in Information Technology
+                        Bachelor's degree in Information Technology
                       </h4>
                       <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
                         PHINMA Cagayan de Oro College
