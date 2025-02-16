@@ -65,6 +65,8 @@ const Portfolio = () => {
   const [currentPair, setCurrentPair] = useState(0);
   const totalPairs = Math.ceil(projects.length / 2);
   const [direction, setDirection] = useState(0);
+  const [theme, setTheme] = useState('dark');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [skillsRef, skillsInView] = useInView({ threshold: 0.1 });
   const [educationRef, educationInView] = useInView({ threshold: 0.1 });
@@ -167,9 +169,13 @@ const Portfolio = () => {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+      const headerOffset = 80; // Adjust this value based on your header height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
       });
     }
   };
@@ -210,9 +216,15 @@ const Portfolio = () => {
     })
   };
 
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
     <motion.div
-      className="min-h-screen bg-gray-900 text-gray-100"
+      className={`min-h-screen ${
+        theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-black'
+      }`}
       initial="initial"
       animate="animate"
       exit="exit"
@@ -225,25 +237,63 @@ const Portfolio = () => {
       ) : (
         <>
           <motion.header
-            className="bg-gray-800 shadow-md fixed top-0 left-0 right-0 z-10"
+            className={`${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            } shadow-md fixed top-0 left-0 right-0 z-10`}
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <nav className="container mx-auto flex items-center justify-between py-4 px-6">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+              <div className="flex items-center gap-4">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Image
+                    src="/assets/images/logo.png"
+                    alt="Logo"
+                    width={50}
+                    height={50}
+                    className="cursor-pointer"
+                  />
+                </motion.div>
+                <motion.button
+                  onClick={toggleTheme}
+                  className={`p-2 rounded-full ${
+                    theme === 'dark' 
+                      ? 'bg-gray-700 hover:bg-gray-600' 
+                      : 'bg-blue-50 hover:bg-blue-100'
+                  }`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {theme === 'dark' ? '🌞' : '🌙'}
+                </motion.button>
+              </div>
+
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2"
               >
-                <Image
-                  src="/assets/images/logo.png"
-                  alt="Logo"
-                  width={50}
-                  height={50}
-                  className="cursor-pointer"
-                />
-              </motion.div>
-              <ul className="flex space-x-6">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  {isMobileMenuOpen ? (
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+
+              <ul className="hidden md:flex space-x-6">
                 {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item, index) => (
                   <motion.li
                     key={item}
@@ -258,6 +308,7 @@ const Portfolio = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         scrollToSection(item.toLowerCase());
+                        setIsMobileMenuOpen(false);
                       }}
                       className="text-sm font-medium hover:text-yellow-500 transition-colors"
                     >
@@ -266,10 +317,50 @@ const Portfolio = () => {
                   </motion.li>
                 ))}
               </ul>
+
+              <AnimatePresence>
+                {isMobileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className={`absolute top-full left-0 right-0 ${
+                      theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                    } shadow-lg md:hidden max-h-[calc(100vh-4rem)] overflow-y-auto`}
+                  >
+                    <ul className="py-2 px-4 space-y-2">
+                      {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item) => (
+                        <motion.li
+                          key={item}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                        >
+                          <a
+                            href={`#${item.toLowerCase()}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              scrollToSection(item.toLowerCase());
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className={`block py-2 text-sm font-medium hover:text-yellow-500 transition-colors ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+                            }`}
+                          >
+                            {item}
+                          </a>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </nav>
           </motion.header>
 
-          <main className="container mx-auto px-6 pt-24 space-y-20">
+          <main className={`container mx-auto px-6 pt-24 space-y-20 ${
+            theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+          }`}>
             <motion.section
               id="home"
               className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-12"
@@ -294,7 +385,10 @@ const Portfolio = () => {
                   I&apos;m <span className="text-yellow-500">Joshua Calma</span>
                 </motion.h2>
                 <motion.p
-                  className="text-xl text-gray-300"
+                  className={`text-xl text-gray-300${
+                    theme === 'dark' ? 'text-gray-300' : 'text-black'
+                  }`}
+                    
                   variants={itemVariants}
                 >
                   I specialize in Web Development!
@@ -343,11 +437,17 @@ const Portfolio = () => {
                 About Me
               </motion.h2>
               <motion.div
-                className="bg-gray-800 p-10 rounded-2xl shadow-lg w-full max-w-5xl space-y-6"
+                className={`${
+                  theme === 'dark' 
+                    ? 'bg-gray-800' 
+                    : 'bg-white border border-blue-100'
+                } p-10 rounded-2xl shadow-lg w-full max-w-5xl space-y-6`}
                 variants={containerVariants}
               >
                 <motion.p
-                  className="text-lg leading-relaxed text-gray-300"
+                  className={`text-lg leading-relaxed ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-black'
+                  }`}
                   variants={itemVariants}
                 >
                   Hi, I&apos;m Joshua Calma, a passionate and dedicated web developer with a
@@ -357,7 +457,9 @@ const Portfolio = () => {
                   that combine aesthetic appeal with functional efficiency.
                 </motion.p>
                 <motion.p
-                  className="text-lg leading-relaxed text-gray-300"
+                  className={`text-lg leading-relaxed ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-black'
+                  }`}
                   variants={itemVariants}
                 >
                   My journey in web development began with a curiosity about how websites
@@ -367,7 +469,9 @@ const Portfolio = () => {
                   meet contemporary web standards.
                 </motion.p>
                 <motion.p
-                  className="text-lg leading-relaxed text-gray-300"
+                  className={`text-lg leading-relaxed ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-black'
+                  }`}
                   variants={itemVariants}
                 >
                   Currently pursuing my Bachelor&apos;s degree in Information Technology at
@@ -378,7 +482,9 @@ const Portfolio = () => {
                   collaborations.
                 </motion.p>
                 <motion.p
-                  className="text-lg leading-relaxed text-gray-300"
+                  className={`text-lg leading-relaxed ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-black'
+                  }`}
                   variants={itemVariants}
                 >
                   When I&apos;m not coding, you&apos;ll find me exploring new technologies,
@@ -400,12 +506,18 @@ const Portfolio = () => {
               <div className="grid md:grid-cols-2 gap-8">
                 <motion.div
                   ref={skillsRef}
-                  className="bg-gray-800 p-8 rounded-lg"
+                  className={`${
+                    theme === 'dark' ? 'bg-gray-800' : 'bg-white border border-blue-100'
+                  } p-8 rounded-lg shadow-lg`}
                   variants={slideVariants}
                   initial="hidden"
                   animate={skillsControls}
                 >
-                  <h3 className="text-2xl font-bold mb-6">Technical Skills</h3>
+                  <h3 className={`text-2xl font-bold mb-6 ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
+                    Technical Skills
+                  </h3>
                   <div className="grid grid-cols-2 gap-4">
                     {skills.map((skill, index) => (
                       <motion.div
@@ -414,10 +526,14 @@ const Portfolio = () => {
                         initial="hidden"
                         animate="visible"
                         transition={{ delay: index * 0.1 }}
-                        className="bg-gray-700 p-4 rounded-lg"
+                        className={`${
+                          theme === 'dark' ? 'bg-gray-700' : 'bg-blue-50'
+                        } p-4 rounded-lg`}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <span>{skill}</span>
+                        <span className={theme === 'dark' ? 'text-gray-100' : 'text-black'}>
+                          {skill}
+                        </span>
                       </motion.div>
                     ))}
                   </div>
@@ -425,20 +541,34 @@ const Portfolio = () => {
 
                 <motion.div
                   ref={educationRef}
-                  className="bg-gray-800 p-8 rounded-lg"
+                  className={`${
+                    theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                  } p-8 rounded-lg shadow-lg`}
                   variants={slideVariants}
                   initial="hidden"
                   animate={educationControls}
                 >
-                  <h3 className="text-2xl font-bold mb-6">Education</h3>
+                  <h3 className={`text-2xl font-bold mb-6 ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
+                    Education
+                  </h3>
                   <div className="space-y-6">
                     <motion.div
                       variants={itemVariants}
                       className="border-l-2 border-blue-500 pl-4"
                     >
-                      <h4 className="text-xl font-semibold">Bachelor&apos;s degree in Information Technology</h4>
-                      <p className="text-gray-400">PHINMA Cagayan de Oro College</p>
-                      <p className="text-gray-400">Expected 2024</p>
+                      <h4 className={`text-xl font-semibold ${
+                        theme === 'dark' ? 'text-gray-100' : 'text-black'
+                      }`}>
+                        Bachelor's degree in Information Technology
+                      </h4>
+                      <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
+                        PHINMA Cagayan de Oro College
+                      </p>
+                      <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
+                        Expected 2024
+                      </p>
                     </motion.div>
                     <motion.div
                       variants={itemVariants}
@@ -457,10 +587,10 @@ const Portfolio = () => {
               id="projects"
               className="min-h-screen"
             >
-              <h2 className="text-4xl font-bold mb-12">
+              <h2 className="text-4xl font-bold mb-12 text-center">
                 Projects
               </h2>
-              <div className="relative max-w-6xl mx-auto">
+              <div className="relative max-w-4xl mx-auto px-12">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
                     key={currentPair}
@@ -473,7 +603,7 @@ const Portfolio = () => {
                       x: { type: "spring", stiffness: 300, damping: 30 },
                       opacity: { duration: 0.2 }
                     }}
-                    className="grid grid-cols-2 gap-6"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center items-center"
                   >
                     {[0, 1].map((offset) => {
                       const projectIndex = currentPair * 2 + offset;
@@ -484,9 +614,15 @@ const Portfolio = () => {
                       return (
                         <div
                           key={projectIndex}
-                          className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+                          className={`${
+                            theme === 'dark' 
+                              ? 'bg-gray-800' 
+                              : 'bg-white border border-blue-100'
+                          } rounded-lg overflow-hidden shadow-lg w-full max-w-[350px] mx-auto transition-all hover:shadow-xl ${
+                            theme === 'dark' ? 'hover:bg-gray-700' : 'hover:border-blue-200'
+                          }`}
                         >
-                          <div className="relative h-48">
+                          <div className="relative h-48 w-full">
                             <Image
                               src={project.image}
                               alt={project.title}
@@ -494,14 +630,24 @@ const Portfolio = () => {
                               objectFit="cover"
                             />
                           </div>
-                          <div className="p-6 space-y-4">
-                            <h3 className="text-2xl font-bold">{project.title}</h3>
-                            <p className="text-gray-300">{project.description}</p>
+                          <div className="p-4 space-y-3">
+                            <h3 className={`text-xl font-bold ${
+                              theme === 'dark' ? 'text-gray-100' : 'text-black'
+                            }`}>
+                              {project.title}
+                            </h3>
+                            <p className={theme === 'dark' ? 'text-gray-300' : 'text-black'}>
+                              {project.description}
+                            </p>
                             <div className="flex flex-wrap gap-2">
                               {project.technologies.map((tech) => (
                                 <span
                                   key={tech}
-                                  className="px-3 py-1 bg-blue-600 rounded-full text-sm"
+                                  className={`px-3 py-1 rounded-full text-sm ${
+                                    theme === 'dark' 
+                                      ? 'bg-blue-600' 
+                                      : 'bg-blue-100 text-blue-800'
+                                  }`}
                                 >
                                   {tech}
                                 </span>
@@ -509,7 +655,11 @@ const Portfolio = () => {
                             </div>
                             <a
                               href={project.link}
-                              className="inline-block bg-blue-600 px-6 py-2 rounded-full hover:bg-blue-500 transition-colors"
+                              className={`inline-block px-4 py-2 rounded-full transition-colors text-sm ${
+                                theme === 'dark'
+                                  ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                                  : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                              }`}
                             >
                               View Project
                             </a>
@@ -520,16 +670,16 @@ const Portfolio = () => {
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-4" style={{ left: '-40px', right: '-40px' }}>
+                <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 w-full flex justify-between">
                   <button
                     onClick={previousPair}
-                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white"
+                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white transform -translate-x-6"
                   >
                     <IoChevronBackOutline size={24} />
                   </button>
                   <button
                     onClick={nextPair}
-                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white"
+                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white transform translate-x-6"
                   >
                     <IoChevronForwardOutline size={24} />
                   </button>
@@ -557,7 +707,7 @@ const Portfolio = () => {
               animate="visible"
             >
               <motion.h2
-                className="text-4xl font-bold mb-12"
+                className="text-4xl font-bold mb-12 text-center"
                 variants={itemVariants}
               >
                 Contact Me
@@ -568,40 +718,58 @@ const Portfolio = () => {
                 variants={containerVariants}
               >
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="user_name" className="block text-sm font-medium mb-2">
+                  <label htmlFor="user_name" className={`block text-sm font-medium mb-2 ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
                     Name
                   </label>
                   <input
                     type="text"
                     id="user_name"
                     name="user_name"
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
+                    className={`w-full px-4 py-2 rounded-lg ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-blue-100'
+                    } border focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors`}
                     required
                   />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="user_email" className="block text-sm font-medium mb-2">
+                  <label htmlFor="user_email" className={`block text-sm font-medium mb-2 ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
                     Email
                   </label>
                   <input
                     type="email"
                     id="user_email"
                     name="user_email"
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
+                    className={`w-full px-4 py-2 rounded-lg ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-blue-100'
+                    } border focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors`}
                     required
                   />
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                  <label htmlFor="message" className={`block text-sm font-medium mb-2 ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
                     Message
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     rows="6"
-                    className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors"
+                    className={`w-full px-4 py-2 rounded-lg ${
+                      theme === 'dark' 
+                        ? 'bg-gray-800 border-gray-700' 
+                        : 'bg-white border-blue-100'
+                    } border focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-colors`}
                     required
                   ></textarea>
                 </motion.div>
@@ -612,6 +780,7 @@ const Portfolio = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   variants={itemVariants}
+                  
                 >
                   Send Message
                 </motion.button>
@@ -620,7 +789,9 @@ const Portfolio = () => {
           </main>
 
           <motion.footer
-            className="bg-gray-800 mt-20 py-8"
+            className={`${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-blue-50'
+            } mt-20 py-8`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -652,10 +823,20 @@ const Portfolio = () => {
                   </ul>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Contact Info</h3>
-                  <p className="text-gray-400">Cagayan de Oro City, Philippines</p>
-                  <p className="text-gray-400">email@example.com</p>
-                  <p className="text-gray-400">+63 912 345 6789</p>
+                  <h3 className={`text-xl font-bold ${
+                    theme === 'dark' ? 'text-gray-100' : 'text-black'
+                  }`}>
+                    Contact Info
+                  </h3>
+                  <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
+                    Cagayan de Oro City, Philippines
+                  </p>
+                  <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
+                    email@example.com
+                  </p>
+                  <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
+                    +63 912 345 6789
+                  </p>
                 </div>
               </div>
               <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
