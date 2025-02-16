@@ -3,42 +3,11 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HashLoader } from 'react-spinners';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 const Portfolio = () => {
-  const [activeTab, setActiveTab] = useState('skills');
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const [skillsRef, skillsInView] = useInView({ threshold: 0.1 });
-  const [educationRef, educationInView] = useInView({ threshold: 0.1 });
-  const [mainRef, mainInView] = useInView({ threshold: 0.1 });
-
-  const mainControls = useAnimation();
-  const skillsControls = useAnimation();
-  const educationControls = useAnimation();
-
-  useEffect(() => {
-    if (mainInView) mainControls.start('visible');
-    else mainControls.start('hidden');
-  }, [mainInView, mainControls]);
-
-  useEffect(() => {
-    if (skillsInView) skillsControls.start('visible');
-    else skillsControls.start('hidden');
-  }, [skillsInView, skillsControls]);
-
-  useEffect(() => {
-    if (educationInView) educationControls.start('visible');
-    else educationControls.start('hidden');
-  }, [educationInView, educationControls]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
   const projects = [
     {
       title: 'Math Game for Kids',
@@ -69,6 +38,41 @@ const Portfolio = () => {
       link: '#'
     },
   ];
+
+  const [activeTab, setActiveTab] = useState('skills');
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentPair, setCurrentPair] = useState(0);
+  const totalPairs = Math.ceil(projects.length / 2);
+  const [direction, setDirection] = useState(0);
+
+  const [skillsRef, skillsInView] = useInView({ threshold: 0.1 });
+  const [educationRef, educationInView] = useInView({ threshold: 0.1 });
+  const [mainRef, mainInView] = useInView({ threshold: 0.1 });
+
+  const mainControls = useAnimation();
+  const skillsControls = useAnimation();
+  const educationControls = useAnimation();
+
+  useEffect(() => {
+    if (mainInView) mainControls.start('visible');
+    else mainControls.start('hidden');
+  }, [mainInView, mainControls]);
+
+  useEffect(() => {
+    if (skillsInView) skillsControls.start('visible');
+    else skillsControls.start('hidden');
+  }, [skillsInView, skillsControls]);
+
+  useEffect(() => {
+    if (educationInView) educationControls.start('visible');
+    else educationControls.start('hidden');
+  }, [educationInView, educationControls]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const pageVariants = {
     initial: {
@@ -158,6 +162,33 @@ const Portfolio = () => {
     'MySQL',
     'Node.js'
   ];
+
+  const nextPair = () => {
+    setDirection(1);
+    setCurrentPair((prev) => (prev + 1) % totalPairs);
+  };
+
+  const previousPair = () => {
+    setDirection(-1);
+    setCurrentPair((prev) => (prev - 1 + totalPairs) % totalPairs);
+  };
+
+  const projectVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 100 : -100,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction < 0 ? 100 : -100,
+      opacity: 0
+    })
+  };
 
   return (
     <motion.div
@@ -405,60 +436,96 @@ const Portfolio = () => {
             <motion.section
               id="projects"
               className="min-h-screen"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
             >
-              <motion.h2
-                className="text-4xl font-bold mb-12"
-                variants={itemVariants}
-              >
+              <h2 className="text-4xl font-bold mb-12">
                 Projects
-              </motion.h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {projects.map((project, index) => (
+              </h2>
+              <div className="relative max-w-6xl mx-auto">
+                <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
-                    key={project.title}
-                    className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
-                    variants={itemVariants}
-                    whileHover={{ y: -10 }}
-                    initial="hidden"
-                    animate="visible"
-                    transition={{ delay: index * 0.1 }}
+                    key={currentPair}
+                    custom={direction}
+                    variants={projectVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 }
+                    }}
+                    className="grid grid-cols-2 gap-6"
                   >
-                    <div className="relative h-48">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        layout="fill"
-                        objectFit="cover"
-                        className="transition-transform duration-300 hover:scale-105"
-                      />
-                    </div>
-                    <div className="p-6 space-y-4">
-                      <h3 className="text-2xl font-bold">{project.title}</h3>
-                      <p className="text-gray-300">{project.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-3 py-1 bg-blue-600 rounded-full text-sm"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <motion.a
-                        href={project.link}
-                        className="inline-block bg-blue-600 px-6 py-2 rounded-full hover:bg-blue-500 transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        View Project
-                      </motion.a>
-                    </div>
+                    {[0, 1].map((offset) => {
+                      const projectIndex = currentPair * 2 + offset;
+                      const project = projects[projectIndex];
+                      
+                      if (!project) return null;
+                      
+                      return (
+                        <div
+                          key={projectIndex}
+                          className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+                        >
+                          <div className="relative h-48">
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              layout="fill"
+                              objectFit="cover"
+                            />
+                          </div>
+                          <div className="p-6 space-y-4">
+                            <h3 className="text-2xl font-bold">{project.title}</h3>
+                            <p className="text-gray-300">{project.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies.map((tech) => (
+                                <span
+                                  key={tech}
+                                  className="px-3 py-1 bg-blue-600 rounded-full text-sm"
+                                >
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                            <a
+                              href={project.link}
+                              className="inline-block bg-blue-600 px-6 py-2 rounded-full hover:bg-blue-500 transition-colors"
+                            >
+                              View Project
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </motion.div>
-                ))}
+                </AnimatePresence>
+
+                <div className="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-4" style={{ left: '-40px', right: '-40px' }}>
+                  <button
+                    onClick={previousPair}
+                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white"
+                  >
+                    <IoChevronBackOutline size={24} />
+                  </button>
+                  <button
+                    onClick={nextPair}
+                    className="bg-gray-800/80 hover:bg-gray-700 p-3 rounded-full text-white"
+                  >
+                    <IoChevronForwardOutline size={24} />
+                  </button>
+                </div>
+
+                <div className="flex justify-center mt-6 space-x-2">
+                  {Array.from({ length: totalPairs }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentPair(index)}
+                      className={`w-3 h-3 rounded-full ${
+                        currentPair === index ? 'bg-blue-500' : 'bg-gray-600'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </motion.section>
 
