@@ -340,7 +340,7 @@ const Portfolio = () => {
             </motion.section>
 
             <motion.section
-              id="skills-education"
+              id="skills"
               className="min-h-screen flex flex-col justify-center"
               variants={containerVariants}
               initial="hidden"
