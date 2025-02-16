@@ -561,7 +561,7 @@ const Portfolio = () => {
                       <h4 className={`text-xl font-semibold ${
                         theme === 'dark' ? 'text-gray-100' : 'text-black'
                       }`}>
-                        Bachelor's degree in Information Technology
+                        Bachelor &apos;s degree in Information Technology
                       </h4>
                       <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
                         PHINMA Cagayan de Oro College
