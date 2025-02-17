@@ -362,12 +362,12 @@ const Portfolio = () => {
             </nav>
           </motion.header>
 
-          <main className={`container mx-auto px-6 pt-24 space-y-20 ${
+          <main className={`container mx-auto px-6 pt-24 space-y-12 ${
             theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
           }`}>
             <motion.section
               id="home"
-              className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-12"
+              className="min-h-[80vh] flex flex-col md:flex-row items-center justify-center gap-12"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -432,7 +432,7 @@ const Portfolio = () => {
               variants={fadeInVariants}
               initial="hidden"
               animate={mainControls}
-              className="min-h-screen flex flex-col justify-center items-center text-center space-y-8"
+              className="min-h-[80vh] flex flex-col justify-center items-center text-center space-y-8"
             >
               <motion.h2
                 className="text-4xl font-bold text-yellow-500"
@@ -502,7 +502,7 @@ const Portfolio = () => {
 
             <motion.section
               id="skills"
-              className="min-h-screen flex flex-col justify-center"
+              className="min-h-[80vh] flex flex-col justify-center"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -589,7 +589,7 @@ const Portfolio = () => {
 
             <motion.section
               id="projects"
-              className="min-h-screen"
+              className="min-h-[80vh]"
             >
               <h2 className="text-4xl font-bold mb-12 text-center">
                 Projects
@@ -705,7 +705,7 @@ const Portfolio = () => {
 
             <motion.section
               id="contact"
-              className="min-h-screen flex flex-col justify-center"
+              className="min-h-[80vh] flex flex-col justify-center"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -836,10 +836,10 @@ const Portfolio = () => {
                     Cagayan de Oro City, Philippines
                   </p>
                   <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
-                    email@example.com
+                    calmaj2003@gmail.com
                   </p>
                   <p className={theme === 'dark' ? 'text-gray-400' : 'text-black'}>
-                    +63 912 345 6789
+                    +63 935 601 3168
                   </p>
                 </div>
               </div>
