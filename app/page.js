@@ -6,6 +6,7 @@ import { HashLoader } from 'react-spinners';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
+import { FaDownload } from "react-icons/fa6";
 import emailjs from '@emailjs/browser';
 
 const sendEmail = (e) => {
@@ -784,10 +785,20 @@ const Portfolio = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   variants={itemVariants}
-                  
                 >
                   Send Message
                 </motion.button>
+                
+                <a
+                  href="/assets/images/resumes.pdf" // Update with the actual path to your resume
+                  className="flex items-center justify-center w-full bg-green-600 py-3 rounded-lg font-medium hover:bg-green-500 transition-colors text-center"
+                  download
+                >
+                  <span className="mr-2">
+                  <FaDownload />
+                  </span>
+                  Download Resume
+                </a>
               </motion.form>
             </motion.section>
           </main>
