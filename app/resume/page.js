@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { FaDownload } from "react-icons/fa6";
 import { RingLoader } from 'react-spinners';
 
-const page = () => {
+const ResumePage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = () => {
@@ -34,4 +34,4 @@ const page = () => {
   )
 }
 
-export default page
+export default ResumePage
