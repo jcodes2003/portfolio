@@ -58,6 +58,13 @@ const Portfolio = () => {
       technologies: ['Flutter', 'Mysql', 'PHP'],
       link: '#'
     },
+    {
+      title: 'Musify',
+      description: 'Music Player Mobile Application',
+      image: '/assets/images/project5.png',
+      technologies: ['Flutter', 'Mysql', 'PHP'],
+      link: '#'
+    },
   ];
 
   const [activeTab, setActiveTab] = useState('skills');
@@ -416,7 +423,7 @@ const Portfolio = () => {
                 <div className="relative w-full h-full rounded-full bg-gradient-to-r from-blue-500 to-yellow-500 p-2">
                   <div className="w-full h-full rounded-full overflow-hidden">
                     <Image
-                      src="/assets/images/joshua.png"
+                      src="/assets/images/me.png"
                       alt="Joshua Calma"
                       layout="fill"
                       objectFit="cover"
@@ -658,7 +665,7 @@ const Portfolio = () => {
                                 </span>
                               ))}
                             </div>
-                            <a
+                            {/* <a
                               href={project.link}
                               className={`inline-block px-4 py-2 rounded-full transition-colors text-sm ${
                                 theme === 'dark'
@@ -667,10 +674,10 @@ const Portfolio = () => {
                               }`}
                             >
                               View Project
-                            </a>
+                            </a> */}
                           </div>
                         </div>
-                      );
+                      );  
                     })}
                   </motion.div>
                 </AnimatePresence>
